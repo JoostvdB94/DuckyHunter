@@ -13,8 +13,7 @@ public class Ball {
 	private int width;
 	private int xSpeed;
 	private int ySpeed;
-	private Direction xDirection;
-	private Direction yDirection;
+	private Tuple<Direction, Direction> moveDirection;
 	public enum Direction {
 		LEFT,
 		RIGHT,
@@ -32,16 +31,18 @@ public class Ball {
 		setHeight(50);
 		
 		if(random.nextBoolean()) {
-			setxDirection(Direction.LEFT);
-			setyDirection(Direction.UP);
+			moveDirection = new Tuple<Direction, Direction>(Direction.LEFT, Direction.UP);
 		} else {
-			setxDirection(Direction.RIGHT);
-			setyDirection(Direction.DOWN);
+			moveDirection = new Tuple<Direction, Direction>(Direction.RIGHT, Direction.DOWN);
 		}
 	}
 	public void move() {
 		checkCollision();
 		moveBall();
+	}
+	
+	public Tuple<Direction, Direction> getDirection() {
+		return moveDirection;
 	}
 	
 	private void checkCollision() {
@@ -55,15 +56,15 @@ public class Ball {
 		
 	}
 	private void moveBall() {
-		if(getxDirection() == Direction.LEFT) {
+		if(getDirection().x == Direction.LEFT) {
 			setxPosition(getxPosition() + getxSpeed()); 
-		} else if(getxDirection() == Direction.RIGHT) {
+		} else if(getDirection().x == Direction.RIGHT) {
 			setxPosition(getxPosition() - getxSpeed()); 
 		}
 		
-		if(getyDirection() == Direction.UP) {
+		if(getDirection().y == Direction.UP) {
 			setyPosition(getyPosition() + getySpeed()); 
-		} else if(getyDirection() == Direction.DOWN) {
+		} else if(getDirection().y == Direction.DOWN) {
 			setyPosition(getyPosition() - getySpeed()); 
 		}
 		
@@ -97,22 +98,7 @@ public class Ball {
 	public void setWidth(int width) {
 		this.width = width;
 	}
-
-	public Direction getyDirection() {
-		return yDirection;
-	}
-
-	public void setyDirection(Direction yDirection) {
-		this.yDirection = yDirection;
-	}
-
-	public Direction getxDirection() {
-		return xDirection;
-	}
-
-	public void setxDirection(Direction xDirection) {
-		this.xDirection = xDirection;
-	}
+	
 	public int getxSpeed() {
 		return xSpeed;
 	}
