@@ -1,10 +1,15 @@
 package model;
 
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.Random;
 
 import view.Frame;
+import view.transformers.ShapeFactory;
+import view.transformers.ShapeTransformer;
 
-public class Ball {
+public class Ball implements GameObject {
+	
 
 	private Random random;
 	private int xPosition;
@@ -25,8 +30,8 @@ public class Ball {
 		random = new Random();
 		setxSpeed(1);
 		setySpeed(1);
-		setxPosition(Frame.SCREENWIDTH / 2);
-		setyPosition(Frame.SCREENHEIGHT / 2);
+		setXPosition(Frame.SCREENWIDTH / 2);
+		setYPosition(Frame.SCREENHEIGHT / 2);
 		setWidth(50);
 		setHeight(50);
 		
@@ -46,40 +51,40 @@ public class Ball {
 	}
 	
 	private void checkCollision() {
-		if(getxPosition() >= Frame.SCREENWIDTH - getWidth() || getxPosition() <= 0) {
+		if(getXPosition() >= Frame.SCREENWIDTH - getWidth() || getXPosition() <= 0) {
 			setxSpeed(getxSpeed() * -1);
 		}
 		
-		if(getyPosition() >= Frame.SCREENHEIGHT - getHeight() || getyPosition() <= 0) {
+		if(getYPosition() >= Frame.SCREENHEIGHT - getHeight() || getYPosition() <= 0) {
 			setySpeed(getySpeed() * -1);
 		}
 		
 	}
 	private void moveBall() {
 		if(getDirection().x == Direction.LEFT) {
-			setxPosition(getxPosition() + getxSpeed()); 
+			setXPosition(getXPosition() + getxSpeed()); 
 		} else if(getDirection().x == Direction.RIGHT) {
-			setxPosition(getxPosition() - getxSpeed()); 
+			setXPosition(getXPosition() - getxSpeed()); 
 		}
 		
 		if(getDirection().y == Direction.UP) {
-			setyPosition(getyPosition() + getySpeed()); 
+			setYPosition(getYPosition() + getySpeed()); 
 		} else if(getDirection().y == Direction.DOWN) {
-			setyPosition(getyPosition() - getySpeed()); 
+			setYPosition(getYPosition() - getySpeed()); 
 		}
 		
 		
 	}
-	public int getxPosition() {
+	public int getXPosition() {
 		return xPosition;
 	}
-	public void setxPosition(int xPosition) {
+	public void setXPosition(int xPosition) {
 		this.xPosition = xPosition;
 	}
-	public int getyPosition() {
+	public int getYPosition() {
 		return yPosition;
 	}
-	public void setyPosition(int yPosition) {
+	public void setYPosition(int yPosition) {
 		this.yPosition = yPosition;
 	}
 
@@ -110,5 +115,15 @@ public class Ball {
 	}
 	public void setySpeed(int ySpeed) {
 		this.ySpeed = ySpeed;
+	}
+	@Override
+	public boolean collidesWith(GameObject object) {
+		ShapeTransformer rectangleTransformer = ShapeFactory.CreateShapeTransformer(getType());
+		
+		return rectangleTransformer.collides(this, object);
+	}
+	@Override
+	public GameObjectType getType() {
+		return GameObjectType.BALL;
 	}
 }

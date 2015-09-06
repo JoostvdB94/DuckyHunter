@@ -26,8 +26,8 @@ public class MainScreen extends JPanel {
 		while (true) {
 			
 			ball.move();
-			System.out.println("xPos" + ball.getxPosition() + "  xSpeed" + ball.getxSpeed());
-			System.out.println("yPos" + ball.getyPosition() + "  ySpeed" + ball.getySpeed());
+			System.out.println("xPos" + ball.getXPosition() + "  xSpeed" + ball.getxSpeed());
+			System.out.println("yPos" + ball.getYPosition() + "  ySpeed" + ball.getySpeed());
 				
 			repaint();
 			try {
@@ -47,7 +47,7 @@ public class MainScreen extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.GREEN);
-		g.fillOval(ball.getxPosition(), ball.getyPosition(), ball.getWidth(),
+		g.fillOval(ball.getXPosition(), ball.getYPosition(), ball.getWidth(),
 				ball.getHeight());
 	}
 }
