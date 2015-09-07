@@ -3,6 +3,8 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
+import controller.events.MouseInput;
+
 public class Frame extends JFrame {
 	
 	public static final int SCREENWIDTH = 1080;
