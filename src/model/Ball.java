@@ -1,8 +1,16 @@
 package model;
 
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import view.Frame;
 import view.transformers.ShapeFactory;
@@ -18,6 +26,7 @@ public class Ball implements GameObject {
 	private int width;
 	private int xSpeed;
 	private int ySpeed;
+	private BufferedImage duckImg = null;
 	private Tuple<Direction, Direction> moveDirection;
 	public enum Direction {
 		LEFT,
@@ -32,18 +41,39 @@ public class Ball implements GameObject {
 		setySpeed(1);
 		setXPosition(Frame.SCREENWIDTH / 2);
 		setYPosition(Frame.SCREENHEIGHT / 2);
-		setWidth(50);
-		setHeight(50);
+		setWidth(100);
+		setHeight(100);
 		
 		if(random.nextBoolean()) {
 			moveDirection = new Tuple<Direction, Direction>(Direction.LEFT, Direction.UP);
 		} else {
 			moveDirection = new Tuple<Direction, Direction>(Direction.RIGHT, Direction.DOWN);
 		}
+		
+		try {
+			duckImg = ImageIO.read(new File("src/view/assets/Duck.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
+	public void draw(Graphics g){
+		g.drawImage(duckImg,getXPosition(), getYPosition(), getWidth(),
+			getHeight(),null);		
+	}
+	
 	public void move() {
 		checkCollision();
 		moveBall();
+	}
+	
+	public void changeImageDirection(){
+		// Flip the image horizontally
+		AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+		tx.translate(-duckImg.getWidth(null), 0);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		duckImg = op.filter(duckImg, null);
 	}
 	
 	public Tuple<Direction, Direction> getDirection() {
@@ -53,9 +83,10 @@ public class Ball implements GameObject {
 	private void checkCollision() {
 		if(getXPosition() >= Frame.SCREENWIDTH - getWidth() || getXPosition() <= 0) {
 			setxSpeed(getxSpeed() * -1);
+			changeImageDirection();
 		}
 		
-		if(getYPosition() >= Frame.SCREENHEIGHT - getHeight() || getYPosition() <= 0) {
+		if(getYPosition() >= Frame.SCREENHEIGHT - getHeight() -200 || getYPosition() <= 0) {
 			setySpeed(getySpeed() * -1);
 		}
 		

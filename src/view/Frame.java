@@ -1,5 +1,10 @@
 package view;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
 
 import javax.swing.JFrame;
 
@@ -13,8 +18,9 @@ public class Frame extends JFrame {
 	public Frame() {
 		setTitle("Ducky hunter");
 		setSize(SCREENWIDTH, SCREENHEIGHT); 
-		setLocation(300, 50); 
+		setLocation(300, 50);
 		MainScreen t = new MainScreen();
+		t.setBackground(Color.getHSBColor(new Float(50.5419),new Float(0.79),new Float(1)));
 		add(t);
 	}
 }

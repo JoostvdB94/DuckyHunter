@@ -4,9 +4,14 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import controller.events.MouseInput;
@@ -20,9 +25,18 @@ public class MainScreen extends JPanel {
 	private MouseInput mouseInput;
 	private boolean isRunning = true;
 	private boolean isHit = false;
+	private BufferedImage bgImg;
+	private BufferedImage targetImg;
 
 	public MainScreen() {
 		ball = new Ball();
+		try {
+			bgImg = ImageIO.read(new File("src/view/assets/DuckhuntBG.png"));
+			targetImg = ImageIO.read(new File("src/view/assets/Target.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		mouseInput = new MouseInput();
 		addMouseListener(mouseInput);
 		addMouseMotionListener(mouseInput);
@@ -104,16 +118,15 @@ public class MainScreen extends JPanel {
 			}
 		};
 
-		if (ball.collidesWith(mouse)) {
-			isHit = true;
+		if (mouseInput.buttonDown(MouseEvent.BUTTON1)) {
+			if (ball.collidesWith(mouse)) {
+				isHit = true;
+			} else {
+				isHit = false;
+			}
+			//isRunning = false;
 		} else {
-			isHit = false;
-		}
-
-		if (mouseInput.buttonDown(1)) {
-			isRunning = false;
-		} else {
-			isRunning = true;
+			//isRunning = true;
 		}
 
 	}
@@ -126,14 +139,11 @@ public class MainScreen extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.GREEN);
-		g.fillOval(ball.getXPosition(), ball.getYPosition(), ball.getWidth(),
-				ball.getHeight());
+		ball.draw(g);
 
 		g.setColor(Color.BLACK);
-		g.fillRect(mouseInput.getPosition().x, mouseInput.getPosition().y, 10,
-				10);
-
+		g.drawImage(targetImg,mouseInput.getPosition().x -25, mouseInput.getPosition().y- 25, 50,50,null);
+		g.drawImage(bgImg, 0, 0, Frame.SCREENWIDTH, Frame.SCREENHEIGHT, null);
 		if (isHit) {
 			g.drawString("GERAAKT, PUNTEN, HIGHSCORE, FEEST",
 					Frame.SCREENWIDTH / 2, Frame.SCREENHEIGHT / 2);
