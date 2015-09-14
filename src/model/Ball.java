@@ -26,7 +26,9 @@ public class Ball implements GameObject {
 	private int width;
 	private int xSpeed;
 	private int ySpeed;
-	private BufferedImage duckImg = null;
+	private BufferedImage[] duckImg = new BufferedImage[2];
+	private int imageIndex = 0;
+	private int fpsCorrect = 0;
 	private Tuple<Direction, Direction> moveDirection;
 	public enum Direction {
 		LEFT,
@@ -51,7 +53,8 @@ public class Ball implements GameObject {
 		}
 		
 		try {
-			duckImg = ImageIO.read(new File("src/view/assets/Duck.png"));
+			duckImg[0] = ImageIO.read(new File("src/view/assets/duck0.png"));
+			duckImg[1] = ImageIO.read(new File("src/view/assets/duck1.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,8 +62,13 @@ public class Ball implements GameObject {
 	}
 	
 	public void draw(Graphics g){
-		g.drawImage(duckImg,getXPosition(), getYPosition(), getWidth(),
+		if(fpsCorrect > 30){
+			imageIndex = Math.abs(Math.abs(imageIndex) -1); 
+			fpsCorrect = 0;
+		}
+		g.drawImage(duckImg[imageIndex],getXPosition(), getYPosition(), getWidth(),
 			getHeight(),null);		
+		fpsCorrect ++;
 	}
 	
 	public void move() {
@@ -71,9 +79,10 @@ public class Ball implements GameObject {
 	public void changeImageDirection(){
 		// Flip the image horizontally
 		AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-		tx.translate(-duckImg.getWidth(null), 0);
+		tx.translate(-duckImg[imageIndex].getWidth(null), 0);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-		duckImg = op.filter(duckImg, null);
+		duckImg[0] = op.filter(duckImg[0], null);
+		duckImg[1] = op.filter(duckImg[1], null);
 	}
 	
 	public Tuple<Direction, Direction> getDirection() {

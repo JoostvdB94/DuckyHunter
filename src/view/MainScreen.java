@@ -26,13 +26,14 @@ public class MainScreen extends JPanel {
 	private boolean isRunning = true;
 	private boolean isHit = false;
 	private BufferedImage bgImg;
-	private BufferedImage targetImg;
+	private BufferedImage[] targetImg = new BufferedImage[2];
 
 	public MainScreen() {
 		ball = new Ball();
 		try {
 			bgImg = ImageIO.read(new File("src/view/assets/DuckhuntBG.png"));
-			targetImg = ImageIO.read(new File("src/view/assets/Target.png"));
+			targetImg[1] = ImageIO.read(new File("src/view/assets/pokeball1.png"));
+			targetImg[0] = ImageIO.read(new File("src/view/assets/pokeball0.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,10 +140,14 @@ public class MainScreen extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		ball.draw(g);
-
 		g.setColor(Color.BLACK);
-		g.drawImage(targetImg,mouseInput.getPosition().x -25, mouseInput.getPosition().y- 25, 50,50,null);
+		int buttondown = 0;
+		if(mouseInput.buttonDown(MouseEvent.BUTTON1)){
+			buttondown = 1;
+		}
+		g.drawImage(targetImg[buttondown],mouseInput.getPosition().x -25, mouseInput.getPosition().y- 35, 50,70,null);
+		ball.draw(g);
+		
 		g.drawImage(bgImg, 0, 0, Frame.SCREENWIDTH, Frame.SCREENHEIGHT, null);
 		if (isHit) {
 			g.drawString("GERAAKT, PUNTEN, HIGHSCORE, FEEST",
