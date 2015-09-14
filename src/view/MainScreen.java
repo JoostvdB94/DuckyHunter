@@ -27,13 +27,17 @@ public class MainScreen extends JPanel {
 	private boolean isHit = false;
 	private BufferedImage bgImg;
 	private BufferedImage[] targetImg = new BufferedImage[2];
-
+	private BufferedImage dog;
+	private int dogPosition = 0;
+	private int dogSpeed = 0;
+	
 	public MainScreen() {
 		ball = new Ball();
 		try {
 			bgImg = ImageIO.read(new File("src/view/assets/DuckhuntBG.png"));
 			targetImg[1] = ImageIO.read(new File("src/view/assets/pokeball1.png"));
 			targetImg[0] = ImageIO.read(new File("src/view/assets/pokeball0.png"));
+			dog = ImageIO.read(new File("src/view/assets/ash.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,6 +125,7 @@ public class MainScreen extends JPanel {
 
 		if (mouseInput.buttonDown(MouseEvent.BUTTON1)) {
 			if (ball.collidesWith(mouse)) {
+				dogPosition ++;
 				isHit = true;
 			} else {
 				isHit = false;
@@ -146,12 +151,27 @@ public class MainScreen extends JPanel {
 			buttondown = 1;
 		}
 		g.drawImage(targetImg[buttondown],mouseInput.getPosition().x -25, mouseInput.getPosition().y- 35, 50,70,null);
-		ball.draw(g);
-		
-		g.drawImage(bgImg, 0, 0, Frame.SCREENWIDTH, Frame.SCREENHEIGHT, null);
+		g.drawImage(dog,Frame.SCREENWIDTH /2, Frame.SCREENHEIGHT - dog.getHeight() -dogPosition +20, 179,300,null);
 		if (isHit) {
-			g.drawString("GERAAKT, PUNTEN, HIGHSCORE, FEEST",
-					Frame.SCREENWIDTH / 2, Frame.SCREENHEIGHT / 2);
+			ball.setxSpeed(0);
+			ball.setySpeed(2);
+			if(dogPosition <= 0 ){
+				//Bottom reached, stop
+				dogSpeed = 0;
+				isHit = false;
+				ball = new Ball();
+			}else if(dogPosition >= 200 && dogSpeed > 0){
+				//Top reached, go down
+				dogSpeed = -1;
+			}else if(dogPosition <= 200 && dogSpeed < 0){
+				dogSpeed = -1;
+			}else{
+				dogSpeed = 1;
+			}
+			dogPosition += dogSpeed;
 		}
+		ball.draw(g);
+		g.drawImage(bgImg, 0, 0, Frame.SCREENWIDTH, Frame.SCREENHEIGHT, null);
+		System.out.println(dogPosition);
 	}
 }

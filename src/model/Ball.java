@@ -26,6 +26,7 @@ public class Ball implements GameObject {
 	private int width;
 	private int xSpeed;
 	private int ySpeed;
+	private int grassHeight = 175;
 	private BufferedImage[] duckImg = new BufferedImage[2];
 	private int imageIndex = 0;
 	private int fpsCorrect = 0;
@@ -41,8 +42,8 @@ public class Ball implements GameObject {
 		random = new Random();
 		setxSpeed(1);
 		setySpeed(1);
-		setXPosition(Frame.SCREENWIDTH / 2);
-		setYPosition(Frame.SCREENHEIGHT / 2);
+		setXPosition(random.nextInt(Frame.SCREENWIDTH));
+		setYPosition(random.nextInt(Frame.SCREENHEIGHT - grassHeight));
 		setWidth(100);
 		setHeight(100);
 		
@@ -95,23 +96,23 @@ public class Ball implements GameObject {
 			changeImageDirection();
 		}
 		
-		if(getYPosition() >= Frame.SCREENHEIGHT - getHeight() -200 || getYPosition() <= 0) {
+		if(getYPosition() >= Frame.SCREENHEIGHT - getHeight() -grassHeight || getYPosition() <= 0) {
 			setySpeed(getySpeed() * -1);
 		}
 		
 	}
 	private void moveBall() {
-		if(getDirection().x == Direction.LEFT) {
+//		if(getDirection().x == Direction.LEFT) {
 			setXPosition(getXPosition() + getxSpeed()); 
-		} else if(getDirection().x == Direction.RIGHT) {
-			setXPosition(getXPosition() - getxSpeed()); 
-		}
+//		} else if(getDirection().x == Direction.RIGHT) {
+//			setXPosition(getXPosition() - getxSpeed()); 
+//		}
 		
-		if(getDirection().y == Direction.UP) {
+//		if(getDirection().y == Direction.UP) {
 			setYPosition(getYPosition() + getySpeed()); 
-		} else if(getDirection().y == Direction.DOWN) {
-			setYPosition(getYPosition() - getySpeed()); 
-		}
+//		} else if(getDirection().y == Direction.DOWN) {
+//			setYPosition(getYPosition() - getySpeed()); 
+//		}
 		
 		
 	}
